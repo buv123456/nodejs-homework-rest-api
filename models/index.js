@@ -15,9 +15,7 @@ const listContacts = async () => {
 
 const getContactById = async (contactId) => {
   const contacts = await listContacts();
-
-  const contactById = contacts.find((item) => item.id === contactId) || null;
-  return contactById;
+  return contacts.find((item) => item.id === contactId) || null;
 };
 
 const removeContact = async (contactId) => {
@@ -27,7 +25,6 @@ const removeContact = async (contactId) => {
   if (idx === -1) return null;
 
   contacts.splice(idx, 1);
-
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 4));
   return true;
 };
@@ -35,7 +32,7 @@ const removeContact = async (contactId) => {
 const addContact = async ({ name, email, phone }) => {
   const contacts = await listContacts();
 
-  const newContact = { name, email, phone, id: nanoid() };
+  const newContact = { id: nanoid(), name, email, phone };
   contacts.push(newContact);
 
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 4));
@@ -44,18 +41,14 @@ const addContact = async ({ name, email, phone }) => {
 
 const updateContact = async (contactId, body) => {
   const contacts = await listContacts();
-  const contactById = contacts.find((item) => item.id === contactId);
 
-  if (!contactById) {
-    return null;
-  }
+  const idx = contacts.findIndex((i) => i.id === contactId);
+  if (idx === -1) return null;
 
-  Object.keys(body).forEach((key) => {
-    contactById[key] = body[key];
-  });
+  contacts[idx] = { ...contacts[idx], ...body };
 
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 4));
-  return contactById;
+  return contacts[idx];
 };
 
 module.exports = {
