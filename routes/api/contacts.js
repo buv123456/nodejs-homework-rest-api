@@ -1,5 +1,4 @@
 const express = require("express");
-// const contactsControllers = require("../../controllers/contact-controller");
 const isEmptyBody = require("../../middleware/isEmptyBody");
 const validateBody = require("../../decorators/validator");
 const { newContact, updateContact } = require("../../helpers/validationSchema");
