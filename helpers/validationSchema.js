@@ -10,13 +10,13 @@ const newContactSchema = Joi.object({
   phone: Joi.string()
     .required()
     .messages({ "any.required": "missing required phone" }),
-}).required();
+});
 
 const updateContactSchema = Joi.object({
-  name: Joi.optional(),
-  email: Joi.optional(),
-  phone: Joi.optional(),
-}).required();
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+});
 
 module.exports = {
   newContact: newContactSchema,

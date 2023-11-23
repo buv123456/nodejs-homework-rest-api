@@ -1,46 +1,26 @@
 const express = require("express");
-const contactsDb = require("../../models/contacts");
-const schema = require("../../helpers/validationSchema");
+// const contactsControllers = require("../../controllers/contact-controller");
+const isEmptyBody = require("../../middleware/isEmptyBody");
+const validateBody = require("../../decorators/validator");
+const { newContact, updateContact } = require("../../helpers/validationSchema");
+const {
+  getAll,
+  getById,
+  add,
+  remove,
+  update,
+} = require("../../controllers/contact-controller");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const allContacts = await contactsDb.listContacts();
-  res.status(200).json(allContacts);
-});
+router.get("/", getAll);
 
-router.get("/:contactId", async (req, res, next) => {
-  const contactById = await contactsDb.getContactById(req.params.contactId);
-  contactById
-    ? res.status(200).json(contactById)
-    : res.status(404).json({ message: "Not found" });
-});
+router.get("/:contactId", getById);
 
-router.post("/", async (req, res, next) => {
-  const { error, value } = schema.newContact.validate(req.body);
-  error
-    ? res.status(400).json({ message: error.message })
-    : res.status(201).json(await contactsDb.addContact(value));
-});
+router.post("/", isEmptyBody, validateBody(newContact), add);
 
-router.delete("/:contactId", async (req, res, next) => {
-  const isDeleted = await contactsDb.removeContact(req.params.contactId);
-  isDeleted
-    ? res.status(200).json({ message: "contact deleted" })
-    : res.status(404).json({ message: "Not found" });
-});
+router.delete("/:contactId", remove);
 
-router.put("/:contactId", async (req, res, next) => {
-  const { error, value } = schema.updateContact.validate(req.body);
-
-  if (error) {
-    res.status(400).json({ message: error.message });
-  } else {
-    const contact = await contactsDb.updateContact(req.params.contactId, value);
-    contact
-      ? res.status(200).json(contact)
-      : res.status(404).json({ message: "Not found" });
-  }
-});
+router.put("/:contactId", isEmptyBody, validateBody(updateContact), update);
 
 module.exports = router;
