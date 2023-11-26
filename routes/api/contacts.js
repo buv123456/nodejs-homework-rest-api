@@ -14,12 +14,12 @@ const router = express.Router();
 
 router.get("/", getAll);
 
-router.get("/:contactId", getById);
+// router.get("/:contactId", getById);
 
-router.post("/", isEmptyBody, validateBody(newContact), add);
+// router.post("/", isEmptyBody, validateBody(newContact), add);
 
-router.delete("/:contactId", remove);
+// router.delete("/:contactId", remove);
 
-router.put("/:contactId", isEmptyBody, validateBody(updateContact), update);
+// router.put("/:contactId", isEmptyBody, validateBody(updateContact), update);
 
 module.exports = router;
