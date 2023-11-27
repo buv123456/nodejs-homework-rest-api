@@ -1,50 +1,41 @@
-const HttpError = require("../helpers/HttpError");
-const contactDecorator = require("../decorators/contact-decorator");
-const { Contact } = require("../models/Contact");
+const controllerWrapper = require("../decorators/controller-wrapper");
 
-const getAll = async (req, res) => {
-  const allContacts = await Contact.find();
-  res.json(allContacts);
-};
+const {
+  getAllService,
+  getByIdService,
+  addService,
+  removeService,
+  updateService,
+} = require("../services/contactService");
 
-const getById = async (req, res) => {
-  const contactById = await Contact.findById(
-    req.params.contactId,
-    "-updatedAt -createdAt -_id"
-  );
-  if (!contactById) {
-    throw HttpError(404, "Not found");
-  }
+const getAll = controllerWrapper(async (req, res) => {
+  res.json(await getAllService());
+});
+
+const getById = controllerWrapper(async (req, res) => {
+  const contactById = await getByIdService(req.params.contactId);
   res.json(contactById);
-};
+});
 
-const add = async (req, res) => {
-  res.status(201).json(await Contact.create(req.body));
-};
+const add = controllerWrapper(async (req, res) => {
+  const contact = await addService(req.body);
+  res.status(201).json(contact);
+});
 
-const remove = async (req, res) => {
-  const isDeleted = await Contact.findByIdAndDelete(req.params.contactId);
-  if (!isDeleted) {
-    throw HttpError(404, "Not found");
-  }
-  res.json({ message: "contact deleted" });
-};
+const remove = controllerWrapper(async (req, res) => {
+  await removeService(req.params.contactId);
+  res.json({ message: "Contact deleted" });
+});
 
-const update = async (req, res) => {
-  const contact = await Contact.findByIdAndUpdate(
-    req.params.contactId,
-    req.body
-  );
-  if (!contact) {
-    throw HttpError(404, "Not found");
-  }
+const update = controllerWrapper(async (req, res) => {
+  const contact = await updateService(req.params.contactId, req.body);
   res.json(contact);
-};
+});
 
 module.exports = {
-  getAll: contactDecorator(getAll),
-  getById: contactDecorator(getById),
-  add: contactDecorator(add),
-  remove: contactDecorator(remove),
-  update: contactDecorator(update),
+  getAll,
+  getById,
+  add,
+  remove,
+  update,
 };

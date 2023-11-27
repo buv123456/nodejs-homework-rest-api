@@ -2,11 +2,7 @@ const express = require("express");
 const isEmptyBody = require("../../middleware/isEmptyBody");
 const isValidId = require("../../middleware/isValidId");
 const validateBody = require("../../decorators/validator");
-const {
-  newContact,
-  updateContact,
-  updateFavorite,
-} = require("../../models/Contact");
+
 const {
   getAll,
   getById,
@@ -14,24 +10,21 @@ const {
   remove,
   update,
 } = require("../../controllers/contact-controller");
+const {
+  newContact,
+  updateContact,
+  updateFavorite,
+} = require("../../helpers/validationSchemas");
 
 const router = express.Router();
 
-router.get("/", getAll);
+router.route("/").get(getAll).post(isEmptyBody, validateBody(newContact), add);
 
-router.get("/:contactId", isValidId, getById);
-
-router.post("/", isEmptyBody, validateBody(newContact), add);
-
-router.delete("/:contactId", isValidId, remove);
-
-router.put(
-  "/:contactId",
-  isValidId,
-  isEmptyBody,
-  validateBody(updateContact),
-  update
-);
+router
+  .route("/:contactId")
+  .get(isValidId, getById)
+  .delete(isValidId, remove)
+  .put(isValidId, isEmptyBody, validateBody(updateContact), update);
 
 router.patch(
   "/:contactId/favorite",
