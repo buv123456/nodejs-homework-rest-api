@@ -1,4 +1,4 @@
-const controllerWrapper = require("../decorators/controller-wrapper");
+const controllerWrapper = require("../utils/decorators/controller-wrapper");
 
 const {
   getAllService,

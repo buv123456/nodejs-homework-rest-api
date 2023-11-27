@@ -1,4 +1,4 @@
-const HttpError = require("../helpers/HttpError");
+const HttpError = require("../utils/helpers/HttpError");
 const Contact = require("../models/Contact");
 
 const getAllService = async () => await Contact.find();

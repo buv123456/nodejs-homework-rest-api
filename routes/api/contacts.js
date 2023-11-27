@@ -1,7 +1,7 @@
 const express = require("express");
 const isEmptyBody = require("../../middleware/isEmptyBody");
 const isValidId = require("../../middleware/isValidId");
-const validateBody = require("../../decorators/validator");
+const validateBody = require("../../middleware/validator");
 
 const {
   getAll,
@@ -14,7 +14,7 @@ const {
   newContact,
   updateContact,
   updateFavorite,
-} = require("../../helpers/validationSchemas");
+} = require("../../utils/helpers/validationSchemas");
 
 const router = express.Router();
 

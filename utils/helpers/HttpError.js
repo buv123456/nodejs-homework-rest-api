@@ -1,4 +1,4 @@
-const httpErrorMessage = require("../constants/httpErrorMessage");
+const httpErrorMessage = require("../../constants/httpErrorMessage");
 
 class HttpError extends Error {
   constructor(
