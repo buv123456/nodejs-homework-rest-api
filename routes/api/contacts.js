@@ -1,7 +1,12 @@
 const express = require("express");
 const isEmptyBody = require("../../middleware/isEmptyBody");
+const isValidId = require("../../middleware/isValidId");
 const validateBody = require("../../decorators/validator");
-const { newContact, updateContact } = require("../../helpers/validationSchema");
+const {
+  newContact,
+  updateContact,
+  updateFavorite,
+} = require("../../models/Contact");
 const {
   getAll,
   getById,
@@ -14,12 +19,26 @@ const router = express.Router();
 
 router.get("/", getAll);
 
-router.get("/:contactId", getById);
+router.get("/:contactId", isValidId, getById);
 
 router.post("/", isEmptyBody, validateBody(newContact), add);
 
-router.delete("/:contactId", remove);
+router.delete("/:contactId", isValidId, remove);
 
-router.put("/:contactId", isEmptyBody, validateBody(updateContact), update);
+router.put(
+  "/:contactId",
+  isValidId,
+  isEmptyBody,
+  validateBody(updateContact),
+  update
+);
+
+router.patch(
+  "/:contactId/favorite",
+  isValidId,
+  isEmptyBody,
+  validateBody(updateFavorite),
+  update
+);
 
 module.exports = router;

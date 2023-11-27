@@ -1,14 +1,17 @@
-const contactsDb = require("../models");
 const HttpError = require("../helpers/HttpError");
 const contactDecorator = require("../decorators/contact-decorator");
+const { Contact } = require("../models/Contact");
 
 const getAll = async (req, res) => {
-  const allContacts = await contactsDb.listContacts();
+  const allContacts = await Contact.find();
   res.json(allContacts);
 };
 
 const getById = async (req, res) => {
-  const contactById = await contactsDb.getContactById(req.params.contactId);
+  const contactById = await Contact.findById(
+    req.params.contactId,
+    "-updatedAt -createdAt -_id"
+  );
   if (!contactById) {
     throw HttpError(404, "Not found");
   }
@@ -16,11 +19,11 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
-  res.status(201).json(await contactsDb.addContact(req.body));
+  res.status(201).json(await Contact.create(req.body));
 };
 
 const remove = async (req, res) => {
-  const isDeleted = await contactsDb.removeContact(req.params.contactId);
+  const isDeleted = await Contact.findByIdAndDelete(req.params.contactId);
   if (!isDeleted) {
     throw HttpError(404, "Not found");
   }
@@ -28,7 +31,7 @@ const remove = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const contact = await contactsDb.updateContact(
+  const contact = await Contact.findByIdAndUpdate(
     req.params.contactId,
     req.body
   );
