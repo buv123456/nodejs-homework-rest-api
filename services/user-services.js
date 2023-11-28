@@ -35,17 +35,26 @@ const loginService = async ({ email, password }) => {
     id: user._id,
   };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-  await User.findByIdAndUpdate(user._id, { token });
+  const authUser = await User.findByIdAndUpdate(user._id, { token });
 
-  return token;
+  return {
+    token,
+    user: { email: authUser.email, subscription: authUser.subscription },
+  };
 };
 
 const logoutService = async (id) => {
   await User.findByIdAndUpdate(id, { token: "" });
 };
 
+const updateService = async (id, body) => {
+  const user = await User.findByIdAndUpdate(id, { ...body });
+  return { email: user.email, subscription: user.subscription };
+};
+
 module.exports = {
   registerService,
   loginService,
   logoutService,
+  updateService,
 };

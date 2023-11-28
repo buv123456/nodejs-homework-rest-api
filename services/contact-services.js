@@ -4,7 +4,7 @@ const getIds = require("../utils/helpers/getIds");
 
 const getAllService = async (req) => {
   const { id } = req.user;
-  const { page = 1, limit = 10, ...filters } = req.query;
+  const { page = 1, limit = 20, ...filters } = req.query;
   const skip = (page - 1) * limit;
   const contacts = await Contact.find(
     { owner: id, ...filters },

@@ -7,22 +7,28 @@ const registerUser = controllerWrapper(async (req, res) => {
 });
 
 const loginUser = controllerWrapper(async (req, res) => {
-  const token = await services.loginService(req.body);
-  res.status(201).json({ token });
+  const result = await services.loginService(req.body);
+  res.status(201).json(result);
 });
 
 const logoutUser = controllerWrapper(async (req, res) => {
   await services.logoutService(req.user._id);
-  res.json({ message: "Signout success" });
+  res.status(204).json({ message: "Logout success. No content" });
 });
 
 const currentUser = controllerWrapper((req, res) =>
-  res.json({ email: req.user.email })
+  res.json({ email: req.user.email, subscription: req.user.subscription })
 );
+
+const updateUser = controllerWrapper(async (req, res) => {
+  const result = await services.updateService(req.user._id, req.body);
+  res.json(result);
+});
 
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
   currentUser,
+  updateUser,
 };
