@@ -4,21 +4,26 @@ const validateBody = require("../../middlewares/validator");
 
 const userSchemas = require("../../utils/helpers/userValidationSchemas");
 const controllers = require("../../controllers/auth-controller");
+const authenticate = require("../../middlewares/authenticate");
 
-const router = express.Router();
+const authRouter = express.Router();
 
-router.post(
+authRouter.post(
   "/register",
   isEmptyBody,
   validateBody(userSchemas.register),
   controllers.registerUser
 );
 
-router.post(
+authRouter.post(
   "/login",
   isEmptyBody,
   validateBody(userSchemas.login),
   controllers.loginUser
 );
 
-module.exports = router;
+authRouter.post("/logout", authenticate, controllers.logoutUser);
+
+authRouter.get("/current", authenticate, controllers.currentUser);
+
+module.exports = authRouter;

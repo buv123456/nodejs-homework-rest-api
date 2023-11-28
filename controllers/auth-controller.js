@@ -11,7 +11,18 @@ const loginUser = controllerWrapper(async (req, res) => {
   res.status(201).json({ token });
 });
 
+const logoutUser = controllerWrapper(async (req, res) => {
+  await services.logoutService(req.user._id);
+  res.json({ message: "Signout success" });
+});
+
+const currentUser = controllerWrapper((req, res) =>
+  res.json({ email: req.user.email })
+);
+
 module.exports = {
   registerUser,
   loginUser,
+  logoutUser,
+  currentUser,
 };
