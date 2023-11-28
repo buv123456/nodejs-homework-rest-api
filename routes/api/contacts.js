@@ -8,7 +8,7 @@ const {
   newContact,
   updateContact,
   updateFavorite,
-} = require("../../utils/helpers/validationSchemas");
+} = require("../../utils/helpers/contactValidationSchemas");
 
 const router = express.Router();
 
