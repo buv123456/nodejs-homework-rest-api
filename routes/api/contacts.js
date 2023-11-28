@@ -9,9 +9,11 @@ const {
   updateContact,
   updateFavorite,
 } = require("../../utils/helpers/contactValidationSchemas");
+const authenticate = require("../../middlewares/authenticate");
 
 const router = express.Router();
 
+router.use(authenticate);
 router
   .route("/")
   .get(ctrl.getAll)
