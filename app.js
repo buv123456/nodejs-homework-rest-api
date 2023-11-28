@@ -3,8 +3,8 @@ const logger = require("morgan");
 const cors = require("cors");
 
 const contactsRouter = require("./routes/api/contacts");
-const handleNotFoundPath = require("./middleware/handleNotFoundPath");
-const handleError = require("./middleware/handleError");
+const handleNotFoundPath = require("./middlewares/handleNotFoundPath");
+const handleError = require("./middlewares/handleError");
 
 const app = express();
 
