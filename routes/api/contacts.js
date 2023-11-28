@@ -1,15 +1,9 @@
 const express = require("express");
-const isEmptyBody = require("../../middleware/isEmptyBody");
-const isValidId = require("../../middleware/isValidId");
-const validateBody = require("../../middleware/validator");
+const isEmptyBody = require("../../middlewares/isEmptyBody");
+const isValidId = require("../../middlewares/isValidId");
+const validateBody = require("../../middlewares/validator");
 
-const {
-  getAll,
-  getById,
-  add,
-  remove,
-  update,
-} = require("../../controllers/contact-controller");
+const ctrl = require("../../controllers/contact-controller");
 const {
   newContact,
   updateContact,
@@ -18,20 +12,23 @@ const {
 
 const router = express.Router();
 
-router.route("/").get(getAll).post(isEmptyBody, validateBody(newContact), add);
+router
+  .route("/")
+  .get(ctrl.getAll)
+  .post(isEmptyBody, validateBody(newContact), ctrl.add);
 
 router
   .route("/:contactId")
-  .get(isValidId, getById)
-  .delete(isValidId, remove)
-  .put(isValidId, isEmptyBody, validateBody(updateContact), update);
+  .get(isValidId, ctrl.getById)
+  .delete(isValidId, ctrl.remove)
+  .put(isValidId, isEmptyBody, validateBody(updateContact), ctrl.update);
 
 router.patch(
   "/:contactId/favorite",
   isValidId,
   isEmptyBody,
   validateBody(updateFavorite),
-  update
+  ctrl.update
 );
 
 module.exports = router;
