@@ -1,7 +1,6 @@
 const express = require("express");
 const isEmptyBody = require("../../middlewares/isEmptyBody");
 const validateBody = require("../../middlewares/validator");
-
 const userSchemas = require("../../utils/helpers/userValidationSchemas");
 const controllers = require("../../controllers/auth-controller");
 const authenticate = require("../../middlewares/authenticate");
