@@ -2,7 +2,9 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 
-const contactsRouter = require("./routes/api/contacts");
+const contactsRouter = require("./routes/api/contacts-routers");
+const authRouter = require("./routes/api/auth-routers");
+
 const handleNotFoundPath = require("./middlewares/handleNotFoundPath");
 const handleError = require("./middlewares/handleError");
 
@@ -15,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/contacts", contactsRouter);
+app.use("/api/auth", authRouter);
 
 app.use(handleNotFoundPath);
 

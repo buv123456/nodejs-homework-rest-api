@@ -8,22 +8,24 @@ const {
   newContact,
   updateContact,
   updateFavorite,
-} = require("../../utils/helpers/validationSchemas");
+} = require("../../utils/helpers/contactValidationSchemas");
+const authenticate = require("../../middlewares/authenticate");
 
-const router = express.Router();
+const contactsRouter = express.Router();
 
-router
+contactsRouter.use(authenticate);
+contactsRouter
   .route("/")
   .get(ctrl.getAll)
   .post(isEmptyBody, validateBody(newContact), ctrl.add);
 
-router
+contactsRouter
   .route("/:contactId")
   .get(isValidId, ctrl.getById)
   .delete(isValidId, ctrl.remove)
   .put(isValidId, isEmptyBody, validateBody(updateContact), ctrl.update);
 
-router.patch(
+contactsRouter.patch(
   "/:contactId/favorite",
   isValidId,
   isEmptyBody,
@@ -31,4 +33,4 @@ router.patch(
   ctrl.update
 );
 
-module.exports = router;
+module.exports = contactsRouter;
