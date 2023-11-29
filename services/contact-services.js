@@ -1,6 +1,5 @@
 const Contact = require("../models/Contact");
-const userServiceWrapper =
-  require("../utils/decorators/user-service-wrapper").default;
+const userServiceWrapper = require("../utils/decorators/user-service-wrapper");
 
 const getAllService = async (req) => {
   const { id } = req.user;
