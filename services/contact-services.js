@@ -1,5 +1,6 @@
 const Contact = require("../models/Contact");
 const userServiceWrapper = require("../utils/decorators/user-service-wrapper");
+const saveAvatarFS = require("../utils/helpers/save-avatar-fs");
 
 const getAllService = async (req) => {
   const { id } = req.user;
@@ -25,8 +26,9 @@ const getByIdService = userServiceWrapper(
 );
 
 const addService = async (req) => {
+  const avatarURL = await saveAvatarFS(req.file);
   const owner = req.user._id;
-  const contact = await Contact.create({ ...req.body, owner });
+  const contact = await Contact.create({ ...req.body, owner, avatarURL });
   return contact;
 };
 
@@ -34,10 +36,13 @@ const removeService = userServiceWrapper(
   async (_id, owner) => await Contact.findOneAndDelete({ _id, owner })
 );
 
-const updateService = userServiceWrapper(
-  async (_id, owner, body) =>
-    await Contact.findOneAndUpdate({ _id, owner }, body)
-);
+const updateService = userServiceWrapper(async (_id, owner, { body, file }) => {
+  if (file) {
+    const avatarURL = await saveAvatarFS(file);
+    body = { ...body, avatarURL };
+  }
+  return await Contact.findOneAndUpdate({ _id, owner }, body);
+});
 
 module.exports = {
   getAllService,

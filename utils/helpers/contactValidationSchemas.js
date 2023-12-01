@@ -11,6 +11,7 @@ const newContactSchema = Joi.object({
     .required()
     .messages({ "any.required": "missing required phone" }),
   favorite: Joi.boolean().default(false),
+  avatarUrl: Joi.string(),
 });
 
 const updateContactSchema = Joi.object().keys({
