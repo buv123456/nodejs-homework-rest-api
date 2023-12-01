@@ -25,6 +25,7 @@ const contactSchema = Schema(
     },
     avatarURL: {
       type: String,
+      required: true,
     },
   },
   { versionKey: false, timestamps: true }

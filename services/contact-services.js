@@ -1,3 +1,4 @@
+const gravatar = require("gravatar");
 const Contact = require("../models/Contact");
 const userServiceWrapper = require("../utils/decorators/user-service-wrapper");
 const saveAvatarFS = require("../utils/helpers/save-avatar-fs");
@@ -26,7 +27,9 @@ const getByIdService = userServiceWrapper(
 );
 
 const addService = async (req) => {
-  const avatarURL = await saveAvatarFS(req.file);
+  const avatarURL = req.file
+    ? await saveAvatarFS(req.file)
+    : gravatar.url(req.body.email, { s: "100", r: "x", d: "retro" }, false);
   const owner = req.user._id;
   const contact = await Contact.create({ ...req.body, owner, avatarURL });
   return contact;
