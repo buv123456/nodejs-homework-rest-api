@@ -1,23 +1,34 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
 require("dotenv/config");
 
 const HttpError = require("../utils/helpers/HttpError");
 const User = require("../models/User");
+const saveAvatarFS = require("../utils/helpers/save-avatar-fs");
 const { JWT_SECRET } = process.env;
 
-const registerService = async (body) => {
+const registerService = async ({ body, file }) => {
   const { email, password } = body;
   const user = await User.findOne({ email });
   if (user) throw new HttpError(409, "Email already exist");
 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({ ...body, password: hashPassword });
+  const avatarURL = file
+    ? await saveAvatarFS(file)
+    : gravatar.url(email, { protocol: "http", s: "250", d: "monsterid" });
+
+  const newUser = await User.create({
+    ...body,
+    password: hashPassword,
+    avatarURL,
+  });
 
   return {
-    email,
+    email: newUser.email,
     subscription: newUser.subscription,
+    avatarURL: newUser.avatarURL,
   };
 };
 
@@ -47,9 +58,20 @@ const logoutService = async (id) => {
   await User.findByIdAndUpdate(id, { token: "" });
 };
 
-const updateService = async (id, body) => {
-  const user = await User.findByIdAndUpdate(id, { ...body });
+
+const updateService = async (id, body, file) => {
+  if (file) {
+    const avatarURL = await saveAvatarFS(file);
+    body = { ...body, avatarURL };
+  }
+  const user = await User.findByIdAndUpdate(id, body);
   return { email: user.email, subscription: user.subscription };
+};
+
+const updateAvatar = async (id, body, file) => {
+  const avatarURL = await saveAvatarFS(file);
+  const user = await User.findByIdAndUpdate(id, { ...body, avatarURL });
+  return { email: user.email, avatarURL: user.avatarURL };
 };
 
 module.exports = {
@@ -57,4 +79,6 @@ module.exports = {
   loginService,
   logoutService,
   updateService,
+
+  updateAvatar,
 };

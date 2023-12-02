@@ -29,7 +29,11 @@ const getByIdService = userServiceWrapper(
 const addService = async (req) => {
   const avatarURL = req.file
     ? await saveAvatarFS(req.file)
-    : gravatar.url(req.body.email, { s: "100", r: "x", d: "retro" }, false);
+    : gravatar.url(
+        req.body.email,
+        { s: "250", protocol: "http", d: "robohash" },
+        false
+      );
   const owner = req.user._id;
   const contact = await Contact.create({ ...req.body, owner, avatarURL });
   return contact;

@@ -17,12 +17,20 @@ const userLoginSchema = Joi.object().keys({
   password: userRegisterSchema.extract("password"),
 });
 
-const updateUserStatusSchema = Joi.object().keys({
-  subscription: userRegisterSchema.extract("subscription").required(),
+const updateUserStatusSchema = Joi.object({
+  subscription: Joi.string().required().valid("starter", "pro", "business"),
 });
+
+// const updateUserAvatarSchema = Joi.object({
+//   avatarURL: Joi.any()
+//     .meta({ swaggerType: "file" })
+//     .required()
+//     .messages({ "any.required": "missing required file" }),
+// });
 
 module.exports = {
   register: userRegisterSchema,
   login: userLoginSchema,
   updateStatus: updateUserStatusSchema,
+  // updateAvatar: updateUserAvatarSchema,
 };

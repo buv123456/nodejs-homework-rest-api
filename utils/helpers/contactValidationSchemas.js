@@ -23,7 +23,10 @@ const updateContactSchema = Joi.object().keys({
 //   .or("name", "email", "phone", "favorite");
 
 const updateContactFavoriteSchema = Joi.object().keys({
-  favorite: newContactSchema.extract("favorite").required(),
+  favorite: newContactSchema
+    .extract("favorite")
+    .required()
+    .messages({ "any.required": "missing required favorite" }),
 });
 
 module.exports = {

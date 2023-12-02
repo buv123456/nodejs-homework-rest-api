@@ -17,9 +17,12 @@ const limit = {
   fileSize: 5 * 1024 * 1024,
 };
 
+const imgExtention = ["png", "jpg", "jpeg", "gif"];
+
 const fileFilter = (req, file, cb) => {
   const extention = file.originalname.split(".").pop();
-  if (extention === "exe") {
+  const isImg = imgExtention.includes(extention);
+  if (!isImg) {
     return cb(new HttpError(400, "Invalid file extention"));
   }
   cb(null, true);

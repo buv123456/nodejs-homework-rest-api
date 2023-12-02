@@ -1,11 +1,12 @@
+const upload = require("../../middlewares/upload");
 const express = require("express");
+
 const isEmptyBody = require("../../middlewares/isEmptyBody");
 const isValidId = require("../../middlewares/isValidId");
 const validateBody = require("../../middlewares/validator");
 const controllers = require("../../controllers/contact-controller");
 const contactSchemas = require("../../utils/helpers/contactValidationSchemas");
 const authenticate = require("../../middlewares/authenticate");
-const upload = require("../../middlewares/upload");
 
 const contactsRouter = express.Router();
 
