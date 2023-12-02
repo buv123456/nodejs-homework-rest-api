@@ -7,6 +7,7 @@ const userSchemas = require("../../utils/helpers/userValidationSchemas");
 const controllers = require("../../controllers/auth-controller");
 const authenticate = require("../../middlewares/authenticate");
 const isFileInReq = require("../../middlewares/is-file-in-req");
+// const resizeImg = require("../../middlewares/resize-img");
 
 const authRouter = express.Router();
 
@@ -42,6 +43,7 @@ authRouter.patch(
   upload.single("avatarURL"),
   authenticate,
   isFileInReq,
+  // resizeImg,
   // isEmptyBody,
   // validateBody(userSchemas.updateAvatar),
   controllers.updateAvatar

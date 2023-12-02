@@ -58,7 +58,6 @@ const logoutService = async (id) => {
   await User.findByIdAndUpdate(id, { token: "" });
 };
 
-
 const updateService = async (id, body, file) => {
   if (file) {
     const avatarURL = await saveAvatarFS(file);
@@ -79,6 +78,5 @@ module.exports = {
   loginService,
   logoutService,
   updateService,
-
   updateAvatar,
 };
