@@ -15,19 +15,14 @@ contactsRouter.use(authenticate);
 contactsRouter
   .route("/")
   .get(controllers.getAll)
-  .post(
-    upload.single("avatarURL"),
-    isEmptyBody,
-    validateBody(contactSchemas.newContact),
-    controllers.add
-  );
+  .post(isEmptyBody, validateBody(contactSchemas.newContact), controllers.add);
 
 contactsRouter
   .route("/:contactId")
   .get(isValidId, controllers.getById)
   .delete(isValidId, controllers.remove)
   .put(
-    upload.single("avatarURL"),
+    upload.single("avatar"),
     isValidId,
     isEmptyBody,
     validateBody(contactSchemas.updateContact),

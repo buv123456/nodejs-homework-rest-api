@@ -27,9 +27,7 @@ const getByIdService = userServiceWrapper(
 );
 
 const addService = async (req) => {
-  const avatarURL = req.file
-    ? await saveAvatarFS(req.file)
-    : gravatar.url(
+  const avatarURL = gravatar.url(
         req.body.email,
         { s: "250", protocol: "http", d: "robohash" },
         false

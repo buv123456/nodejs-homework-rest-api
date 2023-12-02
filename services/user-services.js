@@ -8,16 +8,18 @@ const User = require("../models/User");
 const saveAvatarFS = require("../utils/helpers/save-avatar-fs");
 const { JWT_SECRET } = process.env;
 
-const registerService = async ({ body, file }) => {
+const registerService = async ({ body }) => {
   const { email, password } = body;
   const user = await User.findOne({ email });
   if (user) throw new HttpError(409, "Email already exist");
 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const avatarURL = file
-    ? await saveAvatarFS(file)
-    : gravatar.url(email, { protocol: "http", s: "250", d: "monsterid" });
+  const avatarURL = gravatar.url(email, {
+    protocol: "http",
+    s: "250",
+    d: "monsterid",
+  });
 
   const newUser = await User.create({
     ...body,
