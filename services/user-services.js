@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
-require("dotenv/config");
 
 const HttpError = require("../utils/helpers/HttpError");
 const User = require("../models/User");
@@ -48,7 +47,11 @@ const loginService = async ({ email, password }) => {
     id: user._id,
   };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-  const authUser = await User.findByIdAndUpdate(user._id, { token });
+  const authUser = await User.findByIdAndUpdate(
+    user._id,
+    { token },
+    { new: true }
+  );
 
   return {
     token,
@@ -65,13 +68,17 @@ const updateService = async (id, body, file) => {
     const avatarURL = await saveAvatarFS(file);
     body = { ...body, avatarURL };
   }
-  const user = await User.findByIdAndUpdate(id, body);
+  const user = await User.findByIdAndUpdate(id, body, { new: true });
   return { email: user.email, subscription: user.subscription };
 };
 
 const updateAvatar = async (id, body, file) => {
   const avatarURL = await saveAvatarFS(file);
-  const user = await User.findByIdAndUpdate(id, { ...body, avatarURL });
+  const user = await User.findByIdAndUpdate(
+    id,
+    { ...body, avatarURL },
+    { new: true }
+  );
   return { email: user.email, avatarURL: user.avatarURL };
 };
 

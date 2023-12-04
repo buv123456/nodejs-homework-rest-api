@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const HttpError = require("../utils/helpers/HttpError");
 const User = require("../models/User");
 const controllerWrapper = require("../utils/decorators/controller-wrapper");
-require("dotenv/config");
 
 const { JWT_SECRET } = process.env;
 

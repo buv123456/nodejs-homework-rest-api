@@ -21,16 +21,8 @@ const updateUserStatusSchema = Joi.object({
   subscription: Joi.string().required().valid("starter", "pro", "business"),
 });
 
-// const updateUserAvatarSchema = Joi.object({
-//   avatarURL: Joi.any()
-//     .meta({ swaggerType: "file" })
-//     .required()
-//     .messages({ "any.required": "missing required file" }),
-// });
-
 module.exports = {
   register: userRegisterSchema,
   login: userLoginSchema,
   updateStatus: updateUserStatusSchema,
-  // updateAvatar: updateUserAvatarSchema,
 };
