@@ -64,6 +64,8 @@ describe("test /api/auth/ route", () => {
       .send(loginData);
 
     expect(statusCode).toBe(201);
+    expect(Object.keys(body.user).length).toBe(2);
+    expect(body.user.subscription).toBe("starter" || "pro" || "business");
     expect(body.user.email).toBe(loginData.email);
     expect(body.token).toBeDefined();
   });
