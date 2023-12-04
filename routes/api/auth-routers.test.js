@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 const request = require("supertest");
 
 const app = require("../../app.js");
-const User = require("../../models/User.js");
 
-const { DB_TEST_HOST, PORT = 3000 } = process.env;
+const { DB_TEST_URI, TEST_PORT = 2000 } = process.env;
 
 describe("test /api/auth/ route", () => {
   let server = null;
+
   beforeAll(async () => {
-    await mongoose.connect(DB_TEST_HOST);
-    server = app.listen(2000);
+    await mongoose.connect(DB_TEST_URI);
+    server = app.listen(TEST_PORT);
   });
 
   afterAll(async () => {
@@ -39,7 +39,7 @@ describe("test /api/auth/ route", () => {
 
   // "test /api/auth/login with wrong password"
 
-  test("test /api/auth/login with wrong password", async () => {
+  it("test /api/auth/login with wrong password", async () => {
     const loginData = {
       email: "buvoro@gmail.com",
       password: "1234567",

@@ -7,6 +7,7 @@ const avatarPath = path.resolve("public", "avatars");
 
 const saveAvatarFS = async ({ path: oldPath, filename }) => {
   const newPath = path.join(avatarPath, filename);
+
   await Jimp.read(oldPath)
     .then((image) =>
       image
@@ -21,7 +22,9 @@ const saveAvatarFS = async ({ path: oldPath, filename }) => {
     .catch((err) => {
       throw new HttpError(500, err.message);
     });
+
   await fs.unlink(oldPath);
+
   return path.join("avatars", filename);
 };
 
