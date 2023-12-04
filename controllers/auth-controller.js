@@ -2,7 +2,7 @@ const controllerWrapper = require("../utils/decorators/controller-wrapper");
 const services = require("../services/user-services");
 
 const registerUser = controllerWrapper(async (req, res) => {
-  const contact = await services.registerService(req.body);
+  const contact = await services.registerService(req);
   res.status(201).json(contact);
 });
 
@@ -21,7 +21,12 @@ const currentUser = controllerWrapper((req, res) =>
 );
 
 const updateUser = controllerWrapper(async (req, res) => {
-  const result = await services.updateService(req.user._id, req.body);
+  const result = await services.updateService(req.user._id, req.body, req.file);
+  res.json(result);
+});
+
+const updateAvatar = controllerWrapper(async (req, res) => {
+  const result = await services.updateAvatar(req.user._id, req.body, req.file);
   res.json(result);
 });
 
@@ -31,4 +36,5 @@ module.exports = {
   logoutUser,
   currentUser,
   updateUser,
+  updateAvatar,
 };

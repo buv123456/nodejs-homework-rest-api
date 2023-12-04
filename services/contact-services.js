@@ -1,6 +1,7 @@
-const HttpError = require("../utils/helpers/HttpError");
+const gravatar = require("gravatar");
 const Contact = require("../models/Contact");
-const getIds = require("../utils/helpers/getIds");
+const userServiceWrapper = require("../utils/decorators/user-service-wrapper");
+const saveAvatarFS = require("../utils/helpers/save-avatar-fs");
 
 const getAllService = async (req) => {
   const { id } = req.user;
@@ -17,40 +18,36 @@ const getAllService = async (req) => {
   return contacts;
 };
 
-const getByIdService = async (req) => {
-  const { _id, owner } = getIds(req);
-  const contact = await Contact.findOne(
-    { _id, owner },
-    "-updatedAt -createdAt"
-  ).populate("owner", "email");
-  if (!contact) {
-    throw new HttpError(404, `Contact with id:${_id} not found`);
-  }
-  return contact;
-};
+const getByIdService = userServiceWrapper(
+  async (_id, owner) =>
+    await Contact.findOne({ _id, owner }, "-updatedAt -createdAt").populate(
+      "owner",
+      "email"
+    )
+);
 
 const addService = async (req) => {
-  const { owner } = getIds(req);
-  const contact = await Contact.create({ ...req.body, owner });
+  const avatarURL = gravatar.url(
+        req.body.email,
+        { s: "250", protocol: "http", d: "robohash" },
+        false
+      );
+  const owner = req.user._id;
+  const contact = await Contact.create({ ...req.body, owner, avatarURL });
   return contact;
 };
 
-const removeService = async (req) => {
-  const { _id, owner } = getIds(req);
-  const result = await Contact.findOneAndDelete({ _id, owner });
-  if (!result) {
-    throw new HttpError(404, `Contact with id:${_id} not found`);
-  }
-};
+const removeService = userServiceWrapper(
+  async (_id, owner) => await Contact.findOneAndDelete({ _id, owner })
+);
 
-const updateService = async (req) => {
-  const { _id, owner } = getIds(req);
-  const contact = await Contact.findOneAndUpdate({ _id, owner }, req.body);
-  if (!contact) {
-    throw new HttpError(404, `Contact with id:${_id} not found`);
+const updateService = userServiceWrapper(async (_id, owner, { body, file }) => {
+  if (file) {
+    const avatarURL = await saveAvatarFS(file);
+    body = { ...body, avatarURL };
   }
-  return contact;
-};
+  return await Contact.findOneAndUpdate({ _id, owner }, body);
+});
 
 module.exports = {
   getAllService,

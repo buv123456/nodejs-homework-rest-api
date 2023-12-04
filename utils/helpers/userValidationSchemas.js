@@ -17,8 +17,8 @@ const userLoginSchema = Joi.object().keys({
   password: userRegisterSchema.extract("password"),
 });
 
-const updateUserStatusSchema = Joi.object().keys({
-  subscription: userRegisterSchema.extract("subscription").required(),
+const updateUserStatusSchema = Joi.object({
+  subscription: Joi.string().required().valid("starter", "pro", "business"),
 });
 
 module.exports = {

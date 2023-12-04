@@ -1,10 +1,12 @@
 const express = require("express");
+const upload = require("../../middlewares/upload");
+
 const isEmptyBody = require("../../middlewares/isEmptyBody");
 const validateBody = require("../../middlewares/validator");
-
 const userSchemas = require("../../utils/helpers/userValidationSchemas");
 const controllers = require("../../controllers/auth-controller");
 const authenticate = require("../../middlewares/authenticate");
+const isFileInReq = require("../../middlewares/is-file-in-req");
 
 const authRouter = express.Router();
 
@@ -32,6 +34,14 @@ authRouter.patch(
   isEmptyBody,
   validateBody(userSchemas.updateStatus),
   controllers.updateUser
+);
+
+authRouter.patch(
+  "/avatars",
+  upload.single("avatar"),
+  authenticate,
+  isFileInReq,
+  controllers.updateAvatar
 );
 
 module.exports = authRouter;

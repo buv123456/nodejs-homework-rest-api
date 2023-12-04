@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const HttpError = require("../utils/helpers/HttpError");
 const User = require("../models/User");
 const controllerWrapper = require("../utils/decorators/controller-wrapper");
-require("dotenv/config");
 
 const { JWT_SECRET } = process.env;
 
@@ -13,7 +12,7 @@ const authenticate = controllerWrapper(async (req, res, next) => {
   }
 
   const [bearer, token] = authorization.split(" ");
-  if (bearer !== "Bearer") {
+  if (bearer !== "Bearer" || !token) {
     throw new HttpError(401, "missing Bearer");
   }
 

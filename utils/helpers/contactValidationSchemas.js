@@ -5,6 +5,7 @@ const newContactSchema = Joi.object({
     .required()
     .messages({ "any.required": "missing required name" }),
   email: Joi.string()
+    .email()
     .required()
     .messages({ "any.required": "missing required email" }),
   phone: Joi.string()
@@ -22,7 +23,10 @@ const updateContactSchema = Joi.object().keys({
 //   .or("name", "email", "phone", "favorite");
 
 const updateContactFavoriteSchema = Joi.object().keys({
-  favorite: newContactSchema.extract("favorite").required(),
+  favorite: newContactSchema
+    .extract("favorite")
+    .required()
+    .messages({ "any.required": "missing required favorite" }),
 });
 
 module.exports = {
