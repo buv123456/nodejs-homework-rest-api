@@ -28,6 +28,15 @@ authRouter.post("/logout", authenticate, controllers.logoutUser);
 
 authRouter.get("/current", authenticate, controllers.currentUser);
 
+authRouter.get("/verify/:verificationToken", controllers.verify);
+
+authRouter.post(
+  "/verify/",
+  isEmptyBody,
+  validateBody(userSchemas.verifyEmail),
+  controllers.resendVerify
+);
+
 authRouter.patch(
   "/",
   authenticate,
