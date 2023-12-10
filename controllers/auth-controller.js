@@ -2,13 +2,11 @@ const controllerWrapper = require("../utils/decorators/controller-wrapper");
 const services = require("../services/user-services");
 
 const registerUser = controllerWrapper(async (req, res) => {
-  const contact = await services.registerService(req);
-  res.status(201).json(contact);
+  res.status(201).json(await services.registerService(req));
 });
 
 const loginUser = controllerWrapper(async (req, res) => {
-  const result = await services.loginService(req.body);
-  res.status(201).json(result);
+  res.status(201).json(await services.loginService(req.body));
 });
 
 const logoutUser = controllerWrapper(async (req, res) => {
@@ -21,13 +19,19 @@ const currentUser = controllerWrapper((req, res) =>
 );
 
 const updateUser = controllerWrapper(async (req, res) => {
-  const result = await services.updateService(req.user._id, req.body, req.file);
-  res.json(result);
+  res.json(await services.updateService(req.user._id, req.body, req.file));
 });
 
 const updateAvatar = controllerWrapper(async (req, res) => {
-  const result = await services.updateAvatar(req.user._id, req.body, req.file);
-  res.json(result);
+  res.json(await services.updateAvatar(req.user._id, req.body, req.file));
+});
+
+const verify = controllerWrapper(async (req, res) => {
+  res.json(await services.verifyUser(req.param));
+});
+
+const resendVerify = controllerWrapper(async (req, res) => {
+  res.json(await services.resendVerify(req.body.email));
 });
 
 module.exports = {
@@ -37,4 +41,6 @@ module.exports = {
   currentUser,
   updateUser,
   updateAvatar,
+  verify,
+  resendVerify,
 };

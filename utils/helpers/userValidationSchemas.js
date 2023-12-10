@@ -21,8 +21,13 @@ const updateUserStatusSchema = Joi.object({
   subscription: Joi.string().required().valid("starter", "pro", "business"),
 });
 
+const verifyUserEmailSchema = Joi.object({
+  email: userRegisterSchema.extract("email"),
+});
+
 module.exports = {
   register: userRegisterSchema,
   login: userLoginSchema,
   updateStatus: updateUserStatusSchema,
+  verifyEmail: verifyUserEmailSchema,
 };
